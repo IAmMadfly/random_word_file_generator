@@ -34,7 +34,7 @@ func write_to_file(
 		writer.Write([]byte((*word_pool)[rand_index]+"\n"))
 	}
 
-	fmt.Println(file_name + "Completed writing")
+	fmt.Println(file_name, "- Completed writing")
 	writer.Flush()
 	waiter.Done()
 }
@@ -42,24 +42,24 @@ func write_to_file(
 func main() {
 
 	var args struct {
-		Pool int
-		Count int
-		Files int
+		Pool_count int
+		Word_count int
+		File_count int
 	}
-	args.Pool = 1000
-	args.Count = 1000
-	args.Files = 10
+	args.Pool_count = 1000
+	args.Word_count = 1000
+	args.File_count = 10
 
 	arg.MustParse(&args)
 
 	fmt.Println(
-		"Word pool:", args.Pool, 
-		", Words per file:", args.Count, 
-		", File count:", args.Files,
+		"Word pool:", args.Pool_count, 
+		", Words per file:", args.Word_count, 
+		", File count:", args.File_count,
 	)
 
-	word_pool := args.Pool
-	word_count := args.Count
+	word_pool := args.Pool_count
+	word_count := args.Word_count
 
 	const host = "https://random-word-api.herokuapp.com/word"
 	param := "number"
@@ -84,12 +84,11 @@ func main() {
 			fmt.Println("Failed to decode JSON response!")
 			return
 		}
-		fmt.Printf("Response: %s\n", words[0])
 	}
 
 	var wait_group sync.WaitGroup
 	fmt.Println("Starting to write random word files!")
-	for i := 0; i < args.Files; i++ {
+	for i := 0; i < args.File_count; i++ {
 		file_name := "data_"+strconv.Itoa(i)+".txt"
 
 		wait_group.Add(1)
